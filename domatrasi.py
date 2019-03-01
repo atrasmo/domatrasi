@@ -2,8 +2,8 @@
 ''' This is a script for getting information from an opensrs domain by API
 
 '''
-import argparse ''' needs for args in the command strings'''
-import requests ''' needs for http requests '''
+import argparse
+import requests 
 import hashlib
 import sys
 
