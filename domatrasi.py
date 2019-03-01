@@ -7,6 +7,10 @@ import requests ''' needs for http requests '''
 import hashlib
 import sys
 
+parser = argparse.ArgumentParser()
+parser.parse_args()
+
+
 dominio = sys.argv[1]
 ''' get domain name from first parameter in the command string '''
 TEST_MODE = sys.argv[2]
