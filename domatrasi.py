@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 ''' This is a script for getting information from an opensrs domain by API
 
 '''
