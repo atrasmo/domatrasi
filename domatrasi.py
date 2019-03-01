@@ -43,4 +43,4 @@ xml = '''
 </body>
 </OPS_envelope>
 '''
-print(xml)
+print(dominio,TEST_MODE)
