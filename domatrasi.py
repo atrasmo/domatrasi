@@ -3,18 +3,21 @@
 
 '''
 import argparse
-import requests 
+import requests
 import hashlib
 import sys
 
 parser = argparse.ArgumentParser()
-parser.parse_args()
+parser.add_argument("domain", help="domain name to check <e.g. www.btitalia.it> ")
+parser.add_argument("mode", help="0 or 1 - 0 for real operation and 1 just for test  ", type=int )
+parser.add_argument("-v", "--verbosity", help="output operation on screen", action = "store_true")
+args = parser.parse_args()
+print(args.domain)
 
-
-dominio = sys.argv[1]
+dominio = args.domain
 ''' get domain name from first parameter in the command string '''
-TEST_MODE = sys.argv[2]
-''' get Test Mode from the second parameter in the command string '''
+TEST_MODE = args.mode
+#''' get Test Mode from the second parameter in the command string '''
 
 xml = '''
 <?xml version='1.0' encoding='UTF-8' standalone='no' ?>
@@ -40,3 +43,4 @@ xml = '''
 </body>
 </OPS_envelope>
 '''
+print(xml)
