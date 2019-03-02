@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+ #!/usr/bin/python3
 ''' This is a script for getting information from an opensrs domain by API
 
 '''
@@ -9,7 +9,7 @@ import sys
 
 parser = argparse.ArgumentParser()
 parser.add_argument("domain", help="domain name to check <e.g. www.btitalia.it> ")
-parser.add_argument("mode", help="0 or 1 - 0 for real operation and 1 just for test  ", type=int )
+parser.add_argument("mode", help="0 or 1 - 0 for real operation and 1 just for test  ", type = int, default = 0 )
 parser.add_argument("-v", "--verbosity", help="output operation on screen", action = "store_true")
 args = parser.parse_args()
 print(args.domain)
