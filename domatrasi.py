@@ -7,7 +7,7 @@ import requests
 import hashlib
 import sys
 import apikey
-import json 
+import json
 
 parser = argparse.ArgumentParser()
 group = parser.add_mutually_exclusive_group(required=True)
