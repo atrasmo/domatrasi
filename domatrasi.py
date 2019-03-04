@@ -10,15 +10,10 @@ import apikey
 import json
 
 parser = argparse.ArgumentParser()
-<<<<<<< HEAD
-parser.add_argument("domain", help="domain name to check <e.g. www.btitalia.it> ")
-parser.add_argument("mode", help="0 or 1 - 0 for real operation and 1 just for test  ", type = int, default = 0 )
-=======
 group = parser.add_mutually_exclusive_group(required=True)
 group.add_argument("-d", metavar='<domain name>', help="domain name to check <e.g. btitalia.it> ", type=str )
 group.add_argument("-f", metavar='<file name>', help="text file containing domains name to check one for line <e.g. domain_lists.txt> ")
 parser.add_argument("mode", help="0 or 1 - 0 for real operation and 1 just for test  ", type=int )
->>>>>>> 278c9c8c03540f1c4187f36b1ea1fa9d8aacd636
 parser.add_argument("-v", "--verbosity", help="output operation on screen", action = "store_true")
 args = parser.parse_args()
 #print(args)
@@ -28,6 +23,28 @@ dominio = args.d
 ''' get domain name from first parameter in the command string '''
 TEST_MODE = args.mode
 #''' get Test Mode from the second parameter in the command string '''
+
+connection_options = {
+        'live' : {
+         # IP whitelisting required
+             'reseller_username': apikey.username,
+             'api_key': apikey.api_key,
+             'api_host_port': 'https://rr-n1-tor.opensrs.net:55443',
+        },
+        'test' : {
+             # IP whitelisting not required
+             'reseller_username': apikey.username,
+             'api_key': apikey.api_key,
+             'api_host_port': 'https://horizon.opensrs.net:55443',
+
+        }
+}
+
+if TEST_MODE == 1:
+    connection_details = connection_options['test']
+else:
+    connection_details = connection_options['live']
+
 
 xml = '''
 <?xml version='1.0' encoding='UTF-8' standalone='no' ?>
@@ -53,4 +70,27 @@ xml = '''
 </body>
 </OPS_envelope>
 '''
-print(dominio,TEST_MODE)
+
+md5_obj = hashlib.md5()
+md5_obj.update(xml + connection_details['api_key'])
+signature = md5_obj.hexdigest()
+
+md5_obj = hashlib.md5()
+md5_obj.update(signature + connection_details['api_key'])
+signature = md5_obj.hexdigest()
+
+headers = {
+        'Content-Type':'text/xml',
+        'X-Username': connection_details['reseller_username'],
+        'X-Signature':signature,
+};
+
+r = requests.post(connection_details['api_host_port'], data = xml, headers=headers )
+if r.status_code == requests.codes.ok:
+    print(r.text)
+    #_filewr.write(r.text)
+else:
+    print (r.status_code)
+    #_filewr.write(r.status_code)
+    print (r.text)
+    #_filewr.write(r.text)
