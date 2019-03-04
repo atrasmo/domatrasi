@@ -6,15 +6,25 @@ import argparse
 import requests
 import hashlib
 import sys
+import apikey
+import json
 
 parser = argparse.ArgumentParser()
+<<<<<<< HEAD
 parser.add_argument("domain", help="domain name to check <e.g. www.btitalia.it> ")
 parser.add_argument("mode", help="0 or 1 - 0 for real operation and 1 just for test  ", type = int, default = 0 )
+=======
+group = parser.add_mutually_exclusive_group(required=True)
+group.add_argument("-d", metavar='<domain name>', help="domain name to check <e.g. btitalia.it> ", type=str )
+group.add_argument("-f", metavar='<file name>', help="text file containing domains name to check one for line <e.g. domain_lists.txt> ")
+parser.add_argument("mode", help="0 or 1 - 0 for real operation and 1 just for test  ", type=int )
+>>>>>>> 278c9c8c03540f1c4187f36b1ea1fa9d8aacd636
 parser.add_argument("-v", "--verbosity", help="output operation on screen", action = "store_true")
 args = parser.parse_args()
-print(args.domain)
+#print(args)
+#print(apikey.api_key)
 
-dominio = args.domain
+dominio = args.d
 ''' get domain name from first parameter in the command string '''
 TEST_MODE = args.mode
 #''' get Test Mode from the second parameter in the command string '''
