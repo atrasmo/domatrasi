@@ -1,13 +1,9 @@
  #!/usr/bin/python3
-''' This is a script for getting information from an opensrs domain by API
-
-'''
 import argparse
 import requests
 import hashlib
 import sys
 import apikey
-import json
 
 parser = argparse.ArgumentParser()
 group = parser.add_mutually_exclusive_group(required=True)
@@ -16,13 +12,13 @@ group.add_argument("-f", metavar='<file name>', help="text file containing domai
 parser.add_argument("mode", help="0 or 1 - 0 for real operation and 1 just for test  ", type=int )
 parser.add_argument("-v", "--verbosity", help="output operation on screen", action = "store_true")
 args = parser.parse_args()
-#print(args)
-#print(apikey.api_key)
+print(args)
+print(apikey.api_key)
 
 dominio = args.d
 ''' get domain name from first parameter in the command string '''
 TEST_MODE = args.mode
-#''' get Test Mode from the second parameter in the command string '''
+''' get Test Mode from the second parameter in the command string '''
 
 connection_options = {
         'live' : {
