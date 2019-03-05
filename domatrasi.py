@@ -1,10 +1,9 @@
- #!/usr/bin/python3
+#!/usr/bin/python3
 import argparse
 import requests
 import hashlib
 import sys
 import apikey
-
 parser = argparse.ArgumentParser()
 group = parser.add_mutually_exclusive_group(required=True)
 group.add_argument("-d", metavar='<domain name>', help="domain name to check <e.g. btitalia.it> ", type=str )
@@ -12,8 +11,8 @@ group.add_argument("-f", metavar='<file name>', help="text file containing domai
 parser.add_argument("mode", help="0 or 1 - 0 for real operation and 1 just for test  ", type=int )
 parser.add_argument("-v", "--verbosity", help="output operation on screen", action = "store_true")
 args = parser.parse_args()
-print(args)
-print(apikey.api_key)
+#print(args)
+#print(apikey.api_key)
 
 dominio = args.d
 ''' get domain name from first parameter in the command string '''
@@ -68,11 +67,11 @@ xml = '''
 '''
 
 md5_obj = hashlib.md5()
-md5_obj.update(xml + connection_details['api_key'])
+md5_obj.update((xml + connection_details['api_key']).encode('utf-8'))
 signature = md5_obj.hexdigest()
 
 md5_obj = hashlib.md5()
-md5_obj.update(signature + connection_details['api_key'])
+md5_obj.update((signature + connection_details['api_key']).encode('utf-8'))
 signature = md5_obj.hexdigest()
 
 headers = {
@@ -80,7 +79,11 @@ headers = {
         'X-Username': connection_details['reseller_username'],
         'X-Signature':signature,
 };
-
+print ('****************************')
+print (headers)
+print ('****************************')
+print (xml)
+print ('****************************')
 r = requests.post(connection_details['api_host_port'], data = xml, headers=headers )
 if r.status_code == requests.codes.ok:
     print(r.text)
