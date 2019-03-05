@@ -53,7 +53,7 @@ def doitbydomain(connection_details,dominio):
     r = requests.post(connection_details['api_host_port'], data = xml, headers=headers )
 
     if r.status_code == requests.codes.ok:
-        #print(r.text)
+        print(r.text)
         return (re.search(r"auth_info\">(.*)<",r.text)).group(1)
     else:
         return (r.status_code)
@@ -66,7 +66,7 @@ parser = argparse.ArgumentParser()
 group = parser.add_mutually_exclusive_group(required=True)
 group.add_argument("-d", metavar='<domain name>', help="domain name to check <e.g. btitalia.it> ", type=str )
 group.add_argument("-f", metavar='<file name>', help="text file containing domains name to check one for line <e.g. domain_lists.txt> ")
-parser.add_argument("mode", help="0 or 1 - 0 for real operation and 1 just for test  ", type=int )
+parser.add_argument("-mode", help="0 or 1 - 0 for real operation and 1 just for test  ", type=int, default=0 )
 parser.add_argument("-v", "--verbosity", help="output operation on screen", action = "store_true")
 args = parser.parse_args()
 #debug points
@@ -107,10 +107,10 @@ if (args.f != None):
             for dominio in filein:
                 dominio=  dominio.rstrip("\n")
                 auth_code = doitbydomain(connection_details, dominio)
-                print(dominio , "|",auth_code)
+                print(dominio , "|" , auth_code)
             filein.close()
     except IOError as e:
-        print ("Unable to open file , Does not exist OR no read permissions")
+        print ("Unable to open file , Does not exist or no read permissions")
 else:
     auth_code = doitbydomain(connection_details, dominio)
-    print(dominio , "|",auth_code)
+    print(dominio , "|" , auth_code)
