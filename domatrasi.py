@@ -112,4 +112,4 @@ if (args.f != None):
         print ("Unable to open file , Does not exist or no read permissions")
 else:
     auth_code = doitbydomain(connection_details, dominio)
-    print(dominio + "|" + auth_code)
+    print(dominio + " | " + auth_code)
