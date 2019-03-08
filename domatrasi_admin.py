@@ -2,6 +2,7 @@
 import argparse
 import requests
 import hashlib
+import sys
 import apikey
 import re
 
@@ -9,27 +10,27 @@ def doitbydomain(connection_details,dominio):
     ''' function that give you the auth_info passing domain_name '''
 
     xml = '''
-    <?xml version='1.0' encoding='UTF-8' standalone='no' ?>
-    <!DOCTYPE OPS_envelope SYSTEM 'ops.dtd'>
+    <?xml version='1.0' encoding="UTF-8" standalone="no"?>
+    <!DOCTYPE OPS_envelope SYSTEM "ops.dtd">
     <OPS_envelope>
-    <header>
-        <version>0.9</version>
-    </header>
-    <body>
-    <data_block>
-        <dt_assoc>
-            <item key="protocol">XCP</item>
-            <item key="action">GET</item>
-            <item key="object">DOMAIN</item>
-            <item key="attributes">
+        <header>
+            <version>0.9</version>
+        </header>
+        <body>
+            <data_block>
                 <dt_assoc>
+                    <item key="protocol">XCP</item>
+                    <item key="object">DOMAIN</item>
+                    <item key="action">GET</item>
                     <item key="domain">'''+dominio+'''</item>
-                    <item key="type">domain_auth_info</item>
+                    <item key="attributes">
+                        <dt_assoc>
+                            <item key="type">owner</item>
+                        </dt_assoc>
+                    </item>
                 </dt_assoc>
-            </item>
-        </dt_assoc>
-    </data_block>
-    </body>
+            </data_block>
+        </body>
     </OPS_envelope>
     '''
 
@@ -52,8 +53,8 @@ def doitbydomain(connection_details,dominio):
     r = requests.post(connection_details['api_host_port'], data = xml, headers=headers )
 
     if r.status_code == requests.codes.ok:
-        print(r.text)
-        return (re.search(r"auth_info\">(.*)<",r.text)).group(1)
+        #print (r.status_code)
+        return (re.search(r"country\">(.*)<",r.text)).group(1)
     else:
         return (r.status_code)
         #_filewr.write(r.status_code)
@@ -100,14 +101,16 @@ else:
 
 
 if (args.f != None):
+    _filewr = open(args.f+"_log", "w")
     try:
         with open(args.f) as filein :
-            print (filein)
             for dominio in filein:
-                dominio=  dominio.rstrip("\n")
+                dominio= dominio.rstrip("\n")
                 auth_code = doitbydomain(connection_details, dominio)
-                print(dominio , "|" , auth_code)
+                print(dominio + "|" + auth_code)
+                _filewr.write(dominio + "|" + auth_code+"\n")
             filein.close()
+            _filewr.close()
     except IOError as e:
         print ("Unable to open file , Does not exist or no read permissions")
 else:
