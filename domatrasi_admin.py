@@ -121,8 +121,4 @@ if (args.f != None):
         print ("Unable to open file , Does not exist or no read permissions")
 else:
     auth_code = doitbydomain(connection_details, dominio)
-<<<<<<< HEAD
-    print(dominio + "|" + unescape(auth_code,entities) + "\n")
-=======
-    print(dominio , " | " , auth_code)
->>>>>>> cdf489408d1c7f6c163f2ad02f1aacfdea4b8fb2
+    print(dominio + "|" + unescape(auth_code, entities) + "\n")
