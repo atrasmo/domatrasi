@@ -2,9 +2,9 @@
 import argparse
 import requests
 import hashlib
-import sys
 import apikey
 import re
+from xml.sax.saxutils import unescape
 
 def doitbydomain(connection_details,dominio):
     ''' function that give you the auth_info passing domain_name '''
@@ -53,8 +53,11 @@ def doitbydomain(connection_details,dominio):
     r = requests.post(connection_details['api_host_port'], data = xml, headers=headers )
 
     if r.status_code == requests.codes.ok:
+        print(r.text)
         #print (r.status_code)
-        return (re.search(r"country\">(.*)<",r.text)).group(1)
+        oup = re.search(r"org_name\">(.*)<",r.text).group(1)
+        oup = oup +"|"+ re.search(r"email\">(.*)<",r.text).group(1)
+        return oup
     else:
         return (r.status_code)
         #_filewr.write(r.status_code)
@@ -99,6 +102,9 @@ if TEST_MODE == 1:
 else:
     connection_details = connection_options['live']
 
+entities={
+    "&apos;":"'"
+}
 
 if (args.f != None):
     _filewr = open(args.f+"_log", "w")
@@ -107,12 +113,12 @@ if (args.f != None):
             for dominio in filein:
                 dominio= dominio.rstrip("\n")
                 auth_code = doitbydomain(connection_details, dominio)
-                print(dominio + "|" + auth_code)
-                _filewr.write(dominio + "|" + auth_code+"\n")
+                print(dominio + "|" + unescape(auth_code,entities))
+                _filewr.write(dominio + "|" +unescape(auth_code,entities)+"\n")
             filein.close()
             _filewr.close()
     except IOError as e:
         print ("Unable to open file , Does not exist or no read permissions")
 else:
     auth_code = doitbydomain(connection_details, dominio)
-    print(dominio , "|" , auth_code)
+    print(dominio + "|" + unescape(auth_code,entities) + "\n")
